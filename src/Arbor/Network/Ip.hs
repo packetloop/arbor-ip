@@ -1,8 +1,7 @@
-{-# LANGUAGE DeriveAnyClass             #-}
 {-# LANGUAGE DeriveGeneric              #-}
-{-# LANGUAGE DerivingStrategies         #-}
 {-# LANGUAGE GeneralizedNewtypeDeriving #-}
 {-# LANGUAGE ScopedTypeVariables        #-}
+{-# LANGUAGE StandaloneDeriving         #-}
 
 module Arbor.Network.Ip
 ( IPv4(..), IPv4BitPower(..), IPv4Range(..)
@@ -21,18 +20,24 @@ import GHC.Generics
 
 newtype IPv4BitPower = IPv4BitPower Word32
   deriving (Eq, Show, Ord, Generic)
-  deriving anyclass NFData
+
+instance NFData IPv4BitPower where
+  rnf (IPv4BitPower x) = rnf x
 
 newtype IPv4 = IPv4 Word32
   deriving (Eq, Show, Ord, Enum, Bounded, Generic)
-  deriving anyclass NFData
+
+instance NFData IPv4 where
+  rnf (IPv4 x) = rnf x
 
 data IPv4Range = IPv4Range
   { rangeBase     :: !IPv4
   , rangeBitPower :: !IPv4BitPower
   }
   deriving (Eq, Show, Ord, Generic)
-  deriving anyclass NFData
+
+instance NFData IPv4Range where
+  rnf (IPv4Range a b) = rnf (a, b)
 
 instance Bounded IPv4BitPower where
   minBound = IPv4BitPower 0
